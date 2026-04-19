@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RevisionDojo — IB IA Grader</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">RD</span>
+        <span class="logo-text">RevisionDojo</span>
+      </div>
+      <nav>
+        <button class="nav-btn active" data-tab="grade">Grade IA</button>
+        <button class="nav-btn" data-tab="practice">Practice Questions</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- GRADE TAB -->
+    <section id="tab-grade" class="tab active">
+      <div class="hero">
+        <h1>IB Internal Assessment Grader</h1>
+        <p>Upload your IA or paste your text. Get instant AI feedback based on official IB rubrics.</p>
+      </div>
+
+      <div class="card">
+        <form id="grade-form">
+          <div class="form-row">
+            <label for="subject-select">Subject</label>
+            <select id="subject-select" name="subject">
+              <option value="">Auto-detect</option>
+            </select>
+          </div>
+
+          <div class="upload-area" id="upload-area">
+            <input type="file" id="file-input" accept=".pdf,.txt,.docx" hidden />
+            <div class="upload-prompt" id="upload-prompt">
+              <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+              </svg>
+              <p>Drop your PDF or TXT here</p>
+              <span>or <button type="button" class="link-btn" id="browse-btn">browse files</button></span>
+            </div>
+            <div class="upload-file-info hidden" id="file-info">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
+              </svg>
+              <span id="file-name"></span>
+              <button type="button" class="remove-file" id="remove-file">✕</button>
+            </div>
+          </div>
+
+          <div class="divider"><span>or paste text</span></div>
+
+          <textarea id="ia-text" placeholder="Paste your IA text here..." rows="10"></textarea>
+
+          <button type="submit" class="btn-primary" id="submit-btn">
+            <span id="btn-text">Grade My IA</span>
+            <span id="btn-loader" class="hidden">
+              <span class="spinner"></span> Grading…
+            </span>
+          </button>
+        </form>
+      </div>
+
+      <div id="results" class="hidden">
+        <div class="results-header">
+          <div class="score-circle">
+            <span id="total-score"></span>
+            <span id="max-score-label"></span>
+          </div>
+          <div class="results-summary">
+            <div class="grade-badge" id="grade-badge"></div>
+            <p id="subject-label"></p>
+            <p id="overall-feedback"></p>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card compact">
+            <h3>Key Strengths</h3>
+            <ul id="strengths-list"></ul>
+          </div>
+          <div class="card compact">
+            <h3>Priority Improvements</h3>
+            <ul id="improvements-list"></ul>
+          </div>
+        </div>
+
+        <h2>Criteria Breakdown</h2>
+        <div id="criteria-cards"></div>
+      </div>
+    </section>
+
+    <!-- PRACTICE TAB -->
+    <section id="tab-practice" class="tab hidden">
+      <div class="hero">
+        <h1>Practice Questions</h1>
+        <p>Generate IB-style questions for any subject and topic to prepare your IA.</p>
+      </div>
+
+      <div class="card">
+        <form id="practice-form">
+          <div class="form-row">
+            <label for="practice-subject">Subject</label>
+            <select id="practice-subject" required></select>
+          </div>
+          <div class="form-row">
+            <label for="practice-topic">Topic</label>
+            <input type="text" id="practice-topic" placeholder="e.g. The effect of temperature on enzyme activity" required />
+          </div>
+          <div class="form-row">
+            <label for="practice-count">Number of questions</label>
+            <input type="number" id="practice-count" value="5" min="1" max="20" />
+          </div>
+          <button type="submit" class="btn-primary" id="practice-btn">
+            <span id="practice-btn-text">Generate Questions</span>
+            <span id="practice-btn-loader" class="hidden"><span class="spinner"></span> Generating…</span>
+          </button>
+        </form>
+      </div>
+
+      <div id="practice-results" class="hidden">
+        <h2 id="practice-topic-label"></h2>
+        <div id="questions-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
